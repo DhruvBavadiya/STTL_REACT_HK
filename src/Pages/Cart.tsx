@@ -2,15 +2,34 @@ import React, { useEffect } from "react";
 import CartCard from "../Component/CartCard";
 import { useSelector } from "react-redux";
 import { RootState } from "../Store/store";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  
 
+  console.log(cartItems);
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
+const navigate = useNavigate();
+ const handleClickCash = ()=>{
+  if(localStorage.getItem("userData")){
+    navigate('/cash-out')
+  }
+  else{
+    navigate('/login')
+  }
+ }
+ const handleClickCard = ()=>{
+  if(localStorage.getItem("userData")){
+    navigate('/check-out')
+  }
+  else{
+    navigate('/login')
 
+  }
+ }
   return (
     <section className="py-24 relative">
       <div className="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto">
@@ -56,8 +75,8 @@ const Cart = () => {
         </div>
 
         <div className="flex items-center flex-col sm:flex-row justify-center gap-3 mt-8">
-        <Link
-            to="/cash-out"
+        <button
+            onClick={handleClickCash}
             className="rounded-full w-full max-w-[280px] py-4 text-center justify-center items-center bg-indigo-600 font-semibold text-lg text-white flex transition-all duration-500 hover:bg-indigo-700"
           >
             Checkout with Cash
@@ -77,11 +96,11 @@ const Cart = () => {
                 strokeLinejoin="round"
               />
             </svg>
-          </Link>
+          </button>
 
           {/* Checkout with Card Button */}
-          <Link
-            to="/check-out"
+          <button
+            onClick={handleClickCard}
             className="rounded-full w-full max-w-[280px] py-4 text-center justify-center items-center bg-indigo-600 font-semibold text-lg text-white flex transition-all duration-500 hover:bg-indigo-700"
           >
             Checkout with Card
@@ -101,7 +120,7 @@ const Cart = () => {
                 strokeLinejoin="round"
               />
             </svg>
-          </Link>
+          </button>
         </div>
       </div>
     </section>

@@ -1,14 +1,33 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../Context/authContext';
+import { CartItem, clearCart } from '../Store/cartSlice';
+import { useDispatch } from 'react-redux';
 
 const Navbar = () => {
   const { isLoggedIn, setIsLoggedIn,cartLength,setCartlength } = useContext(AuthContext);
-
-  
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    const localCart = JSON.parse(localStorage.getItem('cartState') || '[]');
+    console.log(localCart.items)
+    const addItemsToDatabase = async (userId: string, items: CartItem[]) => {
+      console.log(userId)
+      await fetch(`http://localhost:8000/reactcart/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cartItems: items }),
+      });
+    };
+    const userData = JSON.parse(localStorage.getItem('userData')??'[]');
+    // console.log("navbar",userData._id)
+    addItemsToDatabase(userData, localCart.items).then((r)=>{console.log("success")})
+    ;
+
+    dispatch(clearCart())
     localStorage.removeItem('userData'); // Clear user data from localStorage
   };
 
@@ -23,7 +42,7 @@ const Navbar = () => {
   },[])
 
   return (
-    <header className="text-blue-950 body-font bg-gradient-to-r from-gray-600 via-blue-700 to-gray-800 sticky top-0 z-50">
+    <header className="text-blue-950 body-font bg-gradient-to-r from-gray-600 via-blue-700 to-gray-800 sticky top-0 z-50 shadow-md">
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center justify-between">
         {/* Logo and Heading */}
         <div className="flex items-center mb-4 md:mb-0">

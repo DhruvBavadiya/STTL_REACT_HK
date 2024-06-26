@@ -1,15 +1,20 @@
-import { useEffect, useState } from "react";
-import { ProductType, getAllProducts } from "../Service/product";
+import { useContext, useEffect, useState } from "react";
+import { ProductType, getAllProducts, getProductPages } from "../Service/product";
 import { Link } from "react-router-dom";
 import { ProductCard } from "../Component/ProductCard";
+import Pagination from "../Component/Pagination";
+import { AuthContext } from "../Context/authContext";
 
 const ProductListing = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
+  const {current,setCurrent} = useContext(AuthContext)
 
   useEffect(() => {
+    console.log(current)
     const fetchProducts = async () => {
       try {
-        const data: ProductType[] = await getAllProducts();
+        const data:ProductType[] = await getProductPages(current.toString());
+        console.log(data)
         setProducts(data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -17,7 +22,7 @@ const ProductListing = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [current]);
 
   return (
     <div className="bg-white">
@@ -36,6 +41,7 @@ const ProductListing = () => {
           ))}
         </div>
       </div>
+      <Pagination/>
     </div>
   );
 };

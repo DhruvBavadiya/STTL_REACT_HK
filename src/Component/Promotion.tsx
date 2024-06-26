@@ -11,7 +11,6 @@ const Promotion = () => {
       try {
         const data: ProductType[] = await getAllProducts();
         setProducts(data);
-        console.log(data); // Log the updated data, not 'products'
       } catch (error) {
         console.error('Error fetching products:', error);
       }

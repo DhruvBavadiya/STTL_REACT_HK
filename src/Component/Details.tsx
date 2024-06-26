@@ -46,12 +46,7 @@ export const Details = ({product}:{product:ProductType}) => {
 
           <p className="leading-relaxed">
               {product?.description}
-            Fam locavore kickstarter distillery. Mixtape chillwave tumeric
-            sriracha taximy chia microdosing tilde DIY. XOXO fam indxgo
-            juiceramps cornhole raw denim forage brooklyn. Everyday carry +1
-            seitan poutine tumeric. Gastropub blue bottle austin listicle
-            pour-over, neutra jean shorts keytar banjo tattooed umami
-            cardigan.
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit, nobis hic cupiditate sed repudiandae, laborum ab tenetur magni eveniet, temporibus qui ut ducimus maiores numquam. Facere, fugiat? Voluptate, porro eum.
           </p>
           <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
             

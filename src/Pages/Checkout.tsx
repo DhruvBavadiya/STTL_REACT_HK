@@ -102,20 +102,7 @@ const CheckoutPage = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email */}
         <div>
-        <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Total
-            </label>
-            <input
-              type="text"
-              id="total"
-              name="total"
-              value={`${total.toFixed(2)}$`}
-              disabled
-              className="mt-1 w-full p-4 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              required
-            />
-          </div>
+       
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
             Email
           </label>
@@ -220,7 +207,7 @@ const CheckoutPage = () => {
         <div className="border-t border-b py-4">
           <div className="flex justify-between mt-4">
             <p className="text-sm font-medium text-gray-900">Total</p>
-            <p className="text-2xl font-semibold text-gray-900">$408.00</p>
+            <p className="text-2xl font-semibold text-gray-900">${total.toFixed(2)}</p>
           </div>
         </div>
 

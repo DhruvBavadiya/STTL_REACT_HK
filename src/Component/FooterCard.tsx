@@ -10,7 +10,7 @@ export const FooterCard = () => {
                 <Link to="/" className="text-gray-400 hover:text-white">Home</Link> {/* Replace <a> with <Link> */}
               </li>
               <li>
-                <Link to="/products" className="text-gray-400 hover:text-white">Products</Link> {/* Replace <a> with <Link> */}
+                <Link to="/all-products" className="text-gray-400 hover:text-white">Products</Link> {/* Replace <a> with <Link> */}
               </li>
               <li>
                 <Link to="/contact" className="text-gray-400 hover:text-white">Contact</Link> {/* Replace <a> with <Link> */}

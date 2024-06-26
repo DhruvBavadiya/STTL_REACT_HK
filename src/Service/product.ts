@@ -13,29 +13,44 @@ export type ProductType = {
   
 // Define a type for the cart item (adjust according to your API response structure)
 interface CartItem {
-  _id: string;
-  productName: string;
-  productDescription: string;
-  productPrice: number;
+  id: string;
+  name: string;
+  price: number;
   quantity: number;
-  imageSrc: string;
+  image: string;
+  userId: string; // Add userId to the cart item
 }
+
 
 export const fetchUserCartFromDatabase = async (userId: string): Promise<CartItem[]> => {
   try {
-    const response = await fetch(`${URL}/reactcart/${userId}`); // Adjust the API endpoint as per your backend setup
-    
-    if (!response.ok) {
+    const response = await fetch(`${URL}/reactcart/${userId}`);
+    if(response.status === 401){
+      return []
+    }
+    if (!response.ok ) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
     const data = await response.json();
-    return data.cartItems; // Assuming response data contains the cart items
+    console.log("dfatatattaa",data)
+    // Assuming data.cartItems is an array of ICartProduct from your backend
+    const cartItems: CartItem[] = data.map((item: any) => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.image,
+      userId: userId,
+    }));
+
+    return cartItems;
   } catch (error) {
     console.error('Error fetching user cart:', error);
     throw new Error('Failed to fetch user cart data');
   }
 };
+
 
 
   export const getAllProducts = async (): Promise<ProductType[]> => {
@@ -45,8 +60,21 @@ export const fetchUserCartFromDatabase = async (userId: string): Promise<CartIte
         throw new Error("Failed to fetch products");
       }
       const data: ProductType[] = await response.json();
-      console.log(data)
       return data;
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return []; // or handle error as needed (throw, return default data, etc.)
+    }
+  };
+
+  export const getProductPages = async (page:string): Promise<ProductType[]> => {
+    try {
+      const response = await fetch(`${URL}/products/${page}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+      const data = await response.json();
+      return data.data;
     } catch (error) {
       console.error("Error fetching products:", error);
       return []; // or handle error as needed (throw, return default data, etc.)

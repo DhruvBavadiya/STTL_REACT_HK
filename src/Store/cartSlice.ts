@@ -69,6 +69,7 @@ const cartSlice = createSlice({
     updateUserId(state, action: PayloadAction<string>) {
       const userId = action.payload;
       state.items.forEach(item => {
+        if(item.userId===null)
         item.userId = userId;
       });
       localStorage.setItem('cartState', JSON.stringify(state.items)); // Update localStorage

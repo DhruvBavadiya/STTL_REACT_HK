@@ -14,6 +14,7 @@ import store from "./Store/store";
 import CheckoutPage from "./Pages/Checkout";
 import Navbar from "./Component/Navbar";
 import Cashout from "./Pages/Cashout";
+import { Orderlist } from "./Pages/Orderlist";
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/check-out" element={<CheckoutPage />} />
           <Route path="/cash-out" element={<Cashout />} />
+          <Route path="/orders" element={<Orderlist />} />
           {/* Add more routes as needed */}
         </Routes>
       </main>

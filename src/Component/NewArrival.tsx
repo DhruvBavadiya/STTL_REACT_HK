@@ -8,7 +8,6 @@ const NewArrival = () => {
     const getProducts = async () => {
       const data: ProductType[] = await getAllProducts();
       setproducts(data);
-      console.log(products);
     };
     getProducts();
   }, []);

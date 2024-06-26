@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../Service/auth';
 import { AuthContext } from '../Context/authContext';
 import { useDispatch } from 'react-redux';
-import { updateUserId } from '../Store/cartSlice';
+import { CartItem, addItem, clearCart, updateUserId } from '../Store/cartSlice';
 import { fetchUserCartFromDatabase } from '../Service/product';
+import { mergeCartData } from '../Utils/mergeCart';
 
 interface LoginProps {
   // Define any props if needed
@@ -37,7 +38,7 @@ const Login: React.FC<LoginProps> = () => {
     e.preventDefault();
     setEmailError('');
     setFormError('');
-
+  
     if (!email) {
       setEmailError('Email is required');
       return;
@@ -45,30 +46,58 @@ const Login: React.FC<LoginProps> = () => {
       setEmailError('Invalid email format');
       return;
     }
-
+  
     if (!password) {
       setFormError('Password is required');
       return;
     }
-
+  
     try {
       const userData = await loginUser(email, password);
       console.log('User logged in:', userData);
-
+  
       localStorage.setItem('userData', JSON.stringify(userData._id));
       setIsLoggedIn(true);
       dispatch(updateUserId(userData._id));
+  
+      const fetchedCart: CartItem[] = await fetchUserCartFromDatabase(userData._id);
+      console.log("fetch",fetchedCart)
+      // Get cart items from local storage
+      const localCart = JSON.parse(localStorage.getItem('cartState') || '[]');
+      console.log(localCart.items)
+      if (fetchedCart.length === 0) {
+        // If fetched cart is empty, store all local storage data into database and also in local storage
+  
+        // Function to add items to cart in the database
+        const addItemsToDatabase = async (userId: string, items: CartItem[]) => {
+          await fetch(`http://localhost:8000/reactcart/${userId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ cartItems: items }),
+          });
+        };
+  
+        addItemsToDatabase(userData._id, localCart.items).then((r)=>{console.log("success")})
+        ;
 
-      // Fetch user's cart items from database after successful login
-      // Assuming you have a function to fetch user's cart from database
-
-      // Compare with local storage cart items
-      
-
-      // Update local storage with merged cart items
-
-      // Navigate to home page after syncing cart items
+        // Store local cart items in local storage
+        // localStorage.setItem('cartState', JSON.stringify(localCart));
+      } else {
+        // Merge local cart with fetched cart
+        const mergedCart = mergeCartData(localCart.items, fetchedCart);
+        console.log("logged" , mergedCart)
+        dispatch(clearCart())
+        mergedCart.forEach((item)=>{
+          dispatch(addItem(item))
+        })
+        // Store merged cart items in local storage
+        // localStorage.setItem('cartState', JSON.stringify(mergedCart));
+      }
+  
       navigate('/');
+  
     } catch (error) {
       console.error('Login error:', error);
       if (error === 'user is not registered.') {

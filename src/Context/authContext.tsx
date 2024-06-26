@@ -6,6 +6,8 @@ interface AuthContextValue {
   setIsLoggedIn: (isLoggedIn: boolean) => void;
   cartLength: number;
   setCartlength: (cartLength: number) => void;
+  current:number;
+  setCurrent:(len:number)=>void
 }
 
 // Initial context value
@@ -14,6 +16,8 @@ const initialContextValue: AuthContextValue = {
   setIsLoggedIn: () => {},
   cartLength: 0,
   setCartlength: () => {},
+  current: 1,
+  setCurrent: () => {},
 };
 // Create context outside of component function
 export const AuthContext = createContext<AuthContextValue>(initialContextValue);
@@ -24,12 +28,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [cartLength, setCartlength] = useState<number>(0);
+  const [current, setCurrent] = useState<number>(0);
   // Value object for context provider
   const authContextValue: AuthContextValue = {
     isLoggedIn,
     setIsLoggedIn,
     cartLength: 0,
     setCartlength,
+    current,
+    setCurrent
   };
 
   return (
