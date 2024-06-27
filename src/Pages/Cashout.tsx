@@ -1,9 +1,11 @@
 // CashCheckout.tsx
 
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../Store/store";
+import { addItem, addOrder } from "../Service/order";
+import { clearCart } from "../Store/cartSlice";
 
 const Cashout = () => {
   const history = useNavigate();
@@ -12,8 +14,9 @@ const Cashout = () => {
   const [address, setAddress] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [formError, setFormError] = useState("");
-
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const handleFormSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate phone number
@@ -30,6 +33,25 @@ const Cashout = () => {
       return;
     } else {
       setFormError("");
+    }
+
+    const user_id = localStorage.getItem("userData") ?? "";
+    
+    const payload: addItem = {
+      user_id: user_id,
+      total: total,
+      method: "card",
+    };
+    console.log(user_id);
+    const res = await addOrder(payload);
+    console.log(res)
+    if (res) {
+      dispatch(clearCart())
+      navigate("/orders");
+
+    } else {
+      navigate("/cart");
+
     }
 
     // Handle form submission logic here
@@ -53,6 +75,7 @@ const Cashout = () => {
     setTotal(calculateTotal());
    
   }, [])
+  
   
 
   return (

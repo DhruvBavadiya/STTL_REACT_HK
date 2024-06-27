@@ -16,7 +16,7 @@ const NewArrival = () => {
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <div className="flex justify-center items-center mb-10">
           <hr className="flex-1 border-gray-300" />
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-center text-white">New Arrival</h2>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-center text-Black">New Arrival</h2>
           <hr className="flex-1 border-gray-300" />
         </div>
 

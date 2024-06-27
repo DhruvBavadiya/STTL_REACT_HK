@@ -1,35 +1,60 @@
-import React, { useEffect } from "react";
+import React from "react";
 import CartCard from "../Component/CartCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Store/store";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { CartItem } from "../Store/cartSlice";
 
 const Cart = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   console.log(cartItems);
+
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
-const navigate = useNavigate();
- const handleClickCash = ()=>{
-  if(localStorage.getItem("userData")){
-    navigate('/cash-out')
-  }
-  else{
-    navigate('/login')
-  }
- }
- const handleClickCard = ()=>{
-  if(localStorage.getItem("userData")){
-    navigate('/check-out')
-  }
-  else{
-    navigate('/login')
 
-  }
- }
+  const addItemsToDatabase = async (userId: string, items: CartItem[]) => {
+    try {
+      console.log(userId);
+      await fetch(`http://localhost:8000/reactcart/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cartItems: items }),
+      });
+    } catch (error) {
+      console.error("Error adding items to database:", error);
+    }
+  };
+
+  const handleCheckout = async (checkoutType: string) => {
+    const localCart = JSON.parse(localStorage.getItem('cartState') || '{"items": []}');
+    console.log(localCart);
+
+    const userData = JSON.parse(localStorage.getItem('userData') ?? 'null');
+    
+    if (userData) {
+      console.log(userData)
+      await addItemsToDatabase(userData, localCart.items);
+      console.log("Success");
+
+      // Optional: Clear cart after successful submission
+      // dispatch(clearCart());
+
+      if (checkoutType === 'cash') {
+        navigate('/cash-out');
+      } else if (checkoutType === 'card') {
+        navigate('/check-out');
+      }
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <section className="py-24 relative">
       <div className="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto">
@@ -75,8 +100,8 @@ const navigate = useNavigate();
         </div>
 
         <div className="flex items-center flex-col sm:flex-row justify-center gap-3 mt-8">
-        <button
-            onClick={handleClickCash}
+          <button
+            onClick={() => handleCheckout('cash')}
             className="rounded-full w-full max-w-[280px] py-4 text-center justify-center items-center bg-indigo-600 font-semibold text-lg text-white flex transition-all duration-500 hover:bg-indigo-700"
           >
             Checkout with Cash
@@ -98,9 +123,8 @@ const navigate = useNavigate();
             </svg>
           </button>
 
-          {/* Checkout with Card Button */}
           <button
-            onClick={handleClickCard}
+            onClick={() => handleCheckout('card')}
             className="rounded-full w-full max-w-[280px] py-4 text-center justify-center items-center bg-indigo-600 font-semibold text-lg text-white flex transition-all duration-500 hover:bg-indigo-700"
           >
             Checkout with Card

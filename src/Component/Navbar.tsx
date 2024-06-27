@@ -71,7 +71,7 @@ const Navbar = () => {
           </div>
           </Link>
           
-          <Link to="/contact" className="mr-5 hover:text-white text-white">Contact</Link>
+          <Link to="/orders" className="mr-5 hover:text-white text-white">Orders</Link>
         </nav>
         
         {/* Conditional Rendering of Login/Logout Button */}

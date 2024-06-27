@@ -38,6 +38,6 @@ export const Specific = () => {
         "__v": 0
   }
   return (
-    <Details product={product?product:dummy}/>
+    <Details />
   );
 };

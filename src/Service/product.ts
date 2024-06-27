@@ -9,7 +9,7 @@ export type ProductType = {
     __v:number;
   };
 
-  const URL = 'http://localhost:8000'
+export const URL = 'http://localhost:8000'
   
 // Define a type for the cart item (adjust according to your API response structure)
 interface CartItem {
@@ -82,7 +82,8 @@ export const fetchUserCartFromDatabase = async (userId: string): Promise<CartIte
   };
   export const getProductById = async (id: string): Promise<ProductType> => {
     try {
-      const response = await fetch(`${URL}/products/${id}`);
+      console.log(id)
+      const response = await fetch(`${URL}/products-id/${id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch product');
       }
